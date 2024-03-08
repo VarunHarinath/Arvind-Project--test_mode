@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom style to adjust form height considering the navbar */
+.adjusted-height {
+  max-height: calc(100vh - 200rem); /* Adjust 4rem to your navbar's height */
+}
