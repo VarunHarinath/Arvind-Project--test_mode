@@ -19,7 +19,7 @@ const Contactus = () => {
           />
         </svg>
       ),
-      contact: "Support@example.com",
+      contact: "Support@fuelx.com",
     },
     {
       icon: (
@@ -38,7 +38,7 @@ const Contactus = () => {
           />
         </svg>
       ),
-      contact: "+1 (555) 000-000",
+      contact: "+91 9873 398726",
     },
     {
       icon: (
@@ -62,7 +62,7 @@ const Contactus = () => {
           />
         </svg>
       ),
-      contact: "Mountain View, California, United State.",
+      contact: "Hyderabad",
     },
   ];
 
