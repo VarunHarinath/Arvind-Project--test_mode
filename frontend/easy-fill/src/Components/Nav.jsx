@@ -7,7 +7,7 @@ const navigation = [
   { name: "Book Now", href: "/booking" },
   { name: "About us", href: "/aboutus" },
   { name: "Features", href: "#" },
-  { name: "Contact US", href: "#" },
+  { name: "Contact Us", href: "/contactus" },
 ];
 
 const Nav = () => {

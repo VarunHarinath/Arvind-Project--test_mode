@@ -12,6 +12,7 @@ import Form from "./Components/Form";
 import Login from "./Components/Login/Login";
 import Signup from "./Components/Login/Signup";
 import Aboutus from "./Components/About Us/Aboutus";
+import Contactus from "./Components/Contact us/Contactus";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/aboutus" element={<Aboutus />} />
+            <Route path="/contactus" element={<Contactus />} />
             <Route path="*" element={<PageError />} />
           </Routes>
         </Router>
