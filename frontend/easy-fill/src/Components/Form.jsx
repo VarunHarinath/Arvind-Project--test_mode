@@ -16,6 +16,7 @@ export default function Form() {
   const [zipCode, SetZipCode] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const handleFormSubmit = (e) => {
+    alert('Redirecting to the razarpay api...')
     e.preventDefault();
 
     const validationError = validateFields();
@@ -32,7 +33,6 @@ export default function Form() {
     if (!email.trim()) return "Please enter a correct email.";
     if (!phoneNumber.trim()) return "Phone number is required.";
     if (!vehicleType.trim()) return "Vehicle type is required.";
-    if (!city.trim()) return "City is required.";
     if (!address.trim()) return "Address is required.";
     if (!stateProv.trim()) return "State/Province is required.";
     if (!zipCode.trim()) return "ZIP/Postal code is required.";
