@@ -14,7 +14,31 @@ export default function Form() {
   const [address, setAddress] = useState("");
   const [stateProv, setStateProv] = useState("");
   const [zipCode, SetZipCode] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
 
+    const validationError = validateFields();
+    if (validationError) {
+      setErrorMessage(validationError);
+      return;
+    }
+
+    setErrorMessage("");
+  };
+  const validateFields = () => {
+    if (!fName.trim()) return "First name is required.";
+    if (!lName.trim()) return "Last name is required.";
+    if (!email.trim()) return "Please enter a correct email.";
+    if (!phoneNumber.trim()) return "Phone number is required.";
+    if (!vehicleType.trim()) return "Vehicle type is required.";
+    if (!city.trim()) return "City is required.";
+    if (!address.trim()) return "Address is required.";
+    if (!stateProv.trim()) return "State/Province is required.";
+    if (!zipCode.trim()) return "ZIP/Postal code is required.";
+
+    return null;
+  };
   useEffect(() => {
     const fetchState = async () => {
       try {
@@ -39,9 +63,55 @@ export default function Form() {
   }, [stateProv, statedata]);
   return (
     <>
+      {errorMessage && (
+        <div className="mt-12 mx-0 px-4 rounded-md border-l-4 border-red-500 bg-red-50 md:max-w-2xl md:mx-auto md:px-8">
+          <div className="flex justify-between py-3">
+            <div className="flex">
+              <div>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6 text-red-500"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+              <div className="self-center ml-3">
+                <span className="text-red-600 font-semibold">Error</span>
+                <p className="text-red-600 mt-1">
+                  {errorMessage} {/* Use the state variable here */}
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => setErrorMessage((prevState) => "")}
+              className="self-start text-red-500"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
       <div className="grid grid-cols-2 gap-7 ml-10  mt-20 justify-center mb-5 	divide-x divide-slate-500 bg-white adjusted-height">
         <div className="overflow-y-auto max-h-screen  justify-center p-5 hover:shadow-lg hover:shadow-slate-500 transition ease-in-out delay-150 rounded-lg  ring-2 ring-offset-2 ring-offset-blue-300 hover:ring-offset-blue-500 ">
-          <form>
+          <form onSubmit={handleFormSubmit}>
             <div className="space-y-12 ">
               <div className="border-b border-gray-900/10 pb-12">
                 <h2 className=" font-semibold leading-7 text-gray-900 font-mono m-5 text-lg">

@@ -8,7 +8,11 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-
+app.get("/", (req, res) => {
+  res.status(200).json({
+    message: true,
+  });
+});
 app.use("/info", stateRouter);
 // app.get("/states", (req, res) => {
 //   var headers = new Headers();
