@@ -2,6 +2,7 @@ import { PhotoIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
 import "tailwindcss/tailwind.css";
 import axios from "axios";
+import { redirect } from "react-router-dom";
 
 export default function Form() {
   const [statedata, setStateData] = useState([]);
@@ -73,6 +74,7 @@ export default function Form() {
         console.log("error sending data", response);
       }
       console.log("sent data succesfully", response);
+      redirect(`http://localhost:5173/sucess/${response.data._id}`);
     } catch (error) {
       console.log(error);
     }

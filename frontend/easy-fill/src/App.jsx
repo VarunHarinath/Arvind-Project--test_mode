@@ -13,6 +13,7 @@ import Login from "./Components/Login/Login";
 import Signup from "./Components/Login/Signup";
 import Aboutus from "./Components/About Us/Aboutus";
 import Contactus from "./Components/Contact us/Contactus";
+import SuccessPage from "./Components/SuccessPage";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/aboutus" element={<Aboutus />} />
             <Route path="/contactus" element={<Contactus />} />
+            <Route path="/sucess/:id" element={<SuccessPage />} />
             <Route path="*" element={<PageError />} />
           </Routes>
         </Router>

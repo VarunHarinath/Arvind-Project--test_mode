@@ -13,7 +13,7 @@ const formGetById = async (req, res) => {
   const { id } = req.params;
   try {
     const response = await formModel.findById(id);
-    res.status(200).json;
+    res.status(200).json(response);
   } catch (error) {
     res.status(500).json(error);
   }
@@ -52,7 +52,8 @@ const formPost = async (req, res) => {
 
   try {
     const response = await formModel.create(updateData);
-    res.status(201).json(response);
+    res.redirect(`http://localhost:5173/sucess/${response._id}`);
+    res.status(200).json(response);
   } catch (error) {
     res.status(500).json(error);
   }
