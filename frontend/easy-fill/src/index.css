@@ -6,3 +6,15 @@
 .adjusted-height {
   max-height: calc(100vh - 200rem); /* Adjust 4rem to your navbar's height */
 }
+
+@layer components {
+  .no-spinner {
+    -moz-appearance: textfield;
+  }
+
+  .no-spinner::-webkit-outer-spin-button,
+  .no-spinner::-webkit-inner-spin-button {
+    margin: 0;
+    -webkit-appearance: none;
+  }
+}

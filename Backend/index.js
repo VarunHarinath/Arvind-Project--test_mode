@@ -1,18 +1,24 @@
 import express from "express";
 import cors from "cors";
+import connectDB from "./ConnectDB.js";
 
 // importing routes
 import stateRouter from "./router/stateRoute.js";
+import formRouter from "./router/FormRoutes.js";
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+connectDB();
 app.get("/", (req, res) => {
   res.status(200).json({
     message: true,
   });
 });
+
+app.use("/form", formRouter);
+
 app.use("/info", stateRouter);
 // app.get("/states", (req, res) => {
 //   var headers = new Headers();

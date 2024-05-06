@@ -1,5 +1,6 @@
 import { PhotoIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
+import "tailwindcss/tailwind.css";
 import axios from "axios";
 
 export default function Form() {
@@ -10,19 +11,70 @@ export default function Form() {
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [vehicleType, setVehicleType] = useState("");
-  const [city, setCity] = useState("");
+  const [city, setCity] = useState("HYD");
   const [address, setAddress] = useState("");
-  const [stateProv, setStateProv] = useState("");
+  const [state, setState] = useState("");
   const [zipCode, SetZipCode] = useState("");
+  const [fuel, setFuel] = useState("");
+  const [quantity, setQuantity] = useState(1);
+  const [price, setPrice] = useState(0);
   const [errorMessage, setErrorMessage] = useState("");
-  const handleFormSubmit = (e) => {
-    alert('Redirecting to the razarpay api...')
+  const FUEL_PRICES = {
+    Petrol: 100, // price per liter in your currency
+    Diesel: 80,
+    "Premium Petrol": 120,
+  };
+  const handleIncrease = () => {
+    setQuantity((prevQuantity) => prevQuantity + 1);
+  };
+
+  const handleDecrease = () => {
+    // Prevent decreasing below 0 liters
+    setQuantity((prevQuantity) => (prevQuantity > 0 ? prevQuantity - 1 : 0));
+  };
+  useEffect(() => {
+    const FUEL_PRICES = {
+      Petrol: 100,
+      Diesel: 80,
+      "Premium Petrol": 120,
+    };
+    const pricePerLiter = FUEL_PRICES[fuel] || 0;
+    setPrice(quantity * pricePerLiter);
+  }, [quantity, fuel]);
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
 
     const validationError = validateFields();
     if (validationError) {
       setErrorMessage(validationError);
       return;
+    }
+
+    const postData = {
+      fname: fName,
+      lname: lName,
+      email: email,
+      phoneNumber: phoneNumber,
+      vehicleType: vehicleType,
+      city: city,
+      address: address,
+      state: state,
+      zipCode: zipCode,
+      quantity: quantity,
+      fuel: fuel,
+      price: price,
+    };
+
+    console.log(postData);
+
+    try {
+      const response = await axios.post("http://localhost:5000/form", postData);
+      if (!response) {
+        console.log("error sending data", response);
+      }
+      console.log("sent data succesfully", response);
+    } catch (error) {
+      console.log(error);
     }
 
     setErrorMessage("");
@@ -34,33 +86,12 @@ export default function Form() {
     if (!phoneNumber.trim()) return "Phone number is required.";
     if (!vehicleType.trim()) return "Vehicle type is required.";
     if (!address.trim()) return "Address is required.";
-    if (!stateProv.trim()) return "State/Province is required.";
+    if (!state.trim()) return "State/Province is required.";
     if (!zipCode.trim()) return "ZIP/Postal code is required.";
 
     return null;
   };
-  useEffect(() => {
-    const fetchState = async () => {
-      try {
-        const response = await axios.get("http://localhost:5000/info/states");
-        setStateData(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchState();
-  }, []);
-  useEffect(() => {
-    if (stateProv.trim() === "") {
-      setFilteredStates([]);
-    } else {
-      setFilteredStates(
-        statedata.filter((state) =>
-          state.name.toLowerCase().includes(stateProv.toLowerCase())
-        )
-      );
-    }
-  }, [stateProv, statedata]);
+
   return (
     <>
       {errorMessage && (
@@ -110,7 +141,7 @@ export default function Form() {
         </div>
       )}
       <div className="grid grid-cols-2 gap-7 ml-10  mt-20 justify-center mb-5 	divide-x divide-slate-500 bg-white adjusted-height">
-        <div className="overflow-y-auto max-h-screen  justify-center p-5 hover:shadow-lg hover:shadow-slate-500 transition ease-in-out delay-150 rounded-lg  ring-2 ring-offset-2 ring-offset-blue-300 hover:ring-offset-blue-500 ">
+        <div className="overflow-y-auto max-h-screen  justify-center p-7 hover:shadow-lg hover:shadow-slate-500 transition ease-in-out delay-150 rounded-lg  ring-2 ring-offset-2 ring-offset-blue-300 hover:ring-offset-blue-500  ">
           <form onSubmit={handleFormSubmit}>
             <div className="space-y-12 ">
               <div className="border-b border-gray-900/10 pb-12">
@@ -211,27 +242,27 @@ export default function Form() {
                   </div>
 
                   <div className="sm:col-span-3">
-      <label
-        htmlFor="country"
-        className="block text-sm font-medium leading-6 text-gray-900"
-      >
-        City
-      </label>
-      <div className="mt-2">
-        <select
-          id="country"
-          name="country"
-          autoComplete="country-name"
-          className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
-          value={city} // Set the value of the select to the state variable
-          onChange={()=>setCity(event.target.value)} // Call the handler when the select value changes
-        >
-          <option value="Hyderabad">Hyderabad</option>
-          <option value="Bangalore">Bangalore</option>
-          <option value="Delhi">Delhi</option>
-        </select>
-      </div>
-    </div>
+                    <label
+                      htmlFor="country"
+                      className="block text-sm font-medium leading-6 text-gray-900"
+                    >
+                      City
+                    </label>
+                    <div className="mt-2">
+                      <select
+                        id="country"
+                        name="country"
+                        autoComplete="country-name"
+                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                        value={city} // Set the value of the select to the state variable
+                        onChange={(event) => setCity(event.target.value)} // Call the handler when the select value changes
+                      >
+                        <option value="Hyderabad">Hyderabad</option>
+                        <option value="Bangalore">Bangalore</option>
+                        <option value="Delhi">Delhi</option>
+                      </select>
+                    </div>
+                  </div>
 
                   <div className="col-span-full">
                     <label
@@ -265,28 +296,12 @@ export default function Form() {
                         type="text"
                         name="region"
                         id="region"
-                        value={stateProv}
-                        onChange={(e) => setStateProv(e.target.value)}
+                        value={state}
+                        onChange={(e) => setState(e.target.value)}
                         autoComplete="address-level1"
                         className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                       />
                     </div>
-                    {filteredStates.length > 0 && (
-                      <div className="mt-2 bg-white shadow-lg max-h-60 overflow-y-auto">
-                        {filteredStates.map((state, index) => (
-                          <div
-                            key={index}
-                            className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                            onClick={() => setStateProv(state.name)}
-                            onBlur={() => {
-                              setTimeout(() => setFilteredStates([]), 100); // Delay hiding the dropdown
-                            }}
-                          >
-                            {state.name}
-                          </div>
-                        ))}
-                      </div>
-                    )}
                   </div>
 
                   <div className="sm:col-span-2">
@@ -315,10 +330,10 @@ export default function Form() {
                 <div className="mt-10 space-y-10">
                   <fieldset>
                     <legend className="text-sm font-semibold leading-6 text-gray-900">
-                      Push Notifications
+                      Vechicle Type
                     </legend>
                     <p className="mt-1 text-sm leading-6 text-gray-600">
-                      These are delivered via SMS to your mobile phone.
+                      To ensure the fuel type
                     </p>
                     <div className="mt-6 space-y-6">
                       <div className="flex items-center gap-x-3">
@@ -337,7 +352,6 @@ export default function Form() {
                         >
                           Car
                         </label>
-                        {vehicleType}
                       </div>
                       <div className="flex items-center gap-x-3">
                         <input
@@ -377,6 +391,95 @@ export default function Form() {
                   </fieldset>
                 </div>
               </div>
+
+              <div className="border-b border-gray-900/10 pb-12">
+                <div className="mt-10 space-y-10">
+                  <fieldset>
+                    <legend className="text-sm font-semibold leading-6 text-gray-900">
+                      Type of Fuel
+                    </legend>
+                    <p className="mt-1 text-sm leading-6 text-gray-600">
+                      Select the fuel type
+                    </p>
+                    <div className="mt-6 space-y-6">
+                      <div className="flex items-center gap-x-3">
+                        <input
+                          id="fuel-petrol"
+                          name="fuel-type"
+                          type="radio"
+                          className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                          value="Petrol"
+                          checked={fuel === "Petrol"}
+                          onChange={(e) => setFuel(e.target.value)}
+                        />
+                        <label
+                          htmlFor="fuel-petrol"
+                          className="block text-sm font-medium leading-6 text-gray-900"
+                        >
+                          Petrol
+                        </label>
+                      </div>
+                      <div className="flex items-center gap-x-3">
+                        <input
+                          id="fuel-diesel"
+                          name="fuel-type"
+                          type="radio"
+                          className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                          value="Diesel"
+                          checked={fuel === "Diesel"}
+                          onChange={(e) => setFuel(e.target.value)}
+                        />
+                        <label
+                          htmlFor="fuel-diesel"
+                          className="block text-sm font-medium leading-6 text-gray-900"
+                        >
+                          Diesel
+                        </label>
+                      </div>
+                      <div className="flex items-center gap-x-3">
+                        <input
+                          id="fuel-premium-petrol"
+                          name="fuel-type"
+                          type="radio"
+                          className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                          value="Premium Petrol"
+                          checked={fuel === "Premium Petrol"}
+                          onChange={(e) => setFuel(e.target.value)}
+                        />
+                        <label
+                          htmlFor="fuel-premium-petrol"
+                          className="block text-sm font-medium leading-6 text-gray-900"
+                        >
+                          Premium Petrol
+                        </label>
+                      </div>
+                    </div>
+                  </fieldset>
+                </div>
+              </div>
+              <div className="flex items-center space-x-2">
+                <button
+                  type="button"
+                  className="p-2 text-lg text-gray-600 transition hover:opacity-75"
+                  aria-label="Decrease quantity"
+                  onClick={handleDecrease}
+                >
+                  −
+                </button>
+                <span>{quantity} Liters</span>
+                <button
+                  type="button"
+                  className="p-2 text-lg text-gray-600 transition hover:opacity-75"
+                  aria-label="Increase quantity"
+                  onClick={handleIncrease}
+                >
+                  +
+                </button>
+              </div>
+            </div>
+            <div>
+              <p>Fuel Type: {fuel}</p>
+              <p>Total Price: ₹{price}</p>
             </div>
 
             <div className="mt-6 flex items-center justify-end gap-x-6">
@@ -390,12 +493,14 @@ export default function Form() {
                 type="submit"
                 className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
-                Save
+                Pay using razorpay
               </button>
             </div>
           </form>
         </div>
-        <div>2</div>
+        <div className="flex items-center justify-center ">
+          Error Loading Map
+        </div>
       </div>
       <div className=" m-16 mt-19"></div>
     </>
