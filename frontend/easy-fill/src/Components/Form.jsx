@@ -26,7 +26,7 @@ export default function Form() {
     "Premium Petrol": 120,
   };
   const handleIncrease = () => {
-    setQuantity((prevQuantity) => prevQuantity + 1);
+    setQuantity((prevQuantity) => (prevQuantity >= 30 ? prevQuantity : prevQuantity+1));
   };
 
   const handleDecrease = () => {
@@ -342,7 +342,7 @@ export default function Form() {
                         <input
                           id="push-everything"
                           name="push-notifications"
-                          type="radio"
+                          type="checkbox"
                           className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
                           value="Car"
                           checked={vehicleType == "Car"}
@@ -359,7 +359,7 @@ export default function Form() {
                         <input
                           id="push-email"
                           name="push-notifications"
-                          type="radio"
+                          type="checkbox"
                           className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
                           value="Bike / Auto"
                           checked={vehicleType == "Bike / Auto"}
@@ -376,7 +376,7 @@ export default function Form() {
                         <input
                           id="push-nothing"
                           name="push-notifications"
-                          type="radio"
+                          type="checkbox"
                           className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
                           value="Truck / Semi - Trucks"
                           checked={vehicleType == "Truck / Semi - Trucks"}
