@@ -49,6 +49,12 @@ const FormSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  orderId: {
+    type: String,
+  },
+  paymentId: {
+    type: String,
+  },
 });
 
 const formModel = mongoose.model("Forms", FormSchema);
