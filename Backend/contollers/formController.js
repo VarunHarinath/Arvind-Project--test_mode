@@ -20,7 +20,6 @@ const formGetById = async (req, res) => {
 };
 
 const formPost = async (req, res) => {
-  console.log(req.body);
   const {
     fname,
     lname,
@@ -52,8 +51,7 @@ const formPost = async (req, res) => {
 
   try {
     const response = await formModel.create(updateData);
-    res.redirect(`http://localhost:5173/sucess/${response._id}`);
-    res.status(200).json(response);
+    res.status(200).json(response._id);
   } catch (error) {
     res.status(500).json(error);
   }

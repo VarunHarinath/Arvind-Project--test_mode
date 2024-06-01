@@ -30,7 +30,7 @@ function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/aboutus" element={<Aboutus />} />
             <Route path="/contactus" element={<Contactus />} />
-            <Route path="/sucess/:id" element={<SuccessPage />} />
+            <Route path="/success/:id" element={<SuccessPage />} />
             <Route path="*" element={<PageError />} />
           </Routes>
         </Router>

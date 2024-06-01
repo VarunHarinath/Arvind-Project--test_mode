@@ -5,6 +5,8 @@ import connectDB from "./ConnectDB.js";
 // importing routes
 import stateRouter from "./router/stateRoute.js";
 import formRouter from "./router/FormRoutes.js";
+import instance from "./contollers/PaymentInstance.js";
+import PaymentRouter from "./router/PaymentRoute.js";
 
 const app = express();
 
@@ -18,6 +20,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/form", formRouter);
+
+app.use("/", PaymentRouter);
 
 app.use("/info", stateRouter);
 // app.get("/states", (req, res) => {

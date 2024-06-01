@@ -20,13 +20,90 @@ export default function Form() {
   const [quantity, setQuantity] = useState(1);
   const [price, setPrice] = useState(0);
   const [errorMessage, setErrorMessage] = useState("");
+  const [isModelOpen, setIsModelOpen] = useState(false);
+  const [customerId, setCustomerId] = useState("");
+
+  const onSubmitPayment = async () => {
+    try {
+      // Sending request to create an order
+      const orderResponse = await axios.post(
+        `http://localhost:5000/checkout/${price}`
+      );
+      const Orderid = orderResponse.data.id;
+
+      // Fetching the Razorpay API key
+      const apiKeyResponse = await axios.get("http://localhost:5000/api");
+      const apiKey = apiKeyResponse.data.key;
+
+      // Razorpay options
+      const options = {
+        key: apiKey,
+        amount: price * 100, // Amount in paise (1 INR = 100 paise)
+        currency: "INR",
+        name: "Fuel X Corp.",
+        description: "FuelX Payment Gateway Integration",
+        image: "", // Add a valid image URL if needed
+        order_id: Orderid,
+        callback_url: `http://localhost:5000/verification/${customerId}`,
+        prefill: {
+          name: `${fName} ${lName}`,
+          email: email,
+          contact: phoneNumber,
+        },
+        notes: {
+          address: "Fuel X Corporate Office",
+        },
+        theme: {
+          color: "#f2f2f2",
+        },
+        handler: function (response) {
+          // This function is called when the payment is successful
+          axios
+            .post(`http://localhost:5000/verification/${customerId}`, {
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+            })
+            .then((res) => {
+              console.log("Verification response:", res.data);
+              // Redirect to success page or show success message
+              window.location.href = `http://localhost:5173/success/${customerId}`;
+            })
+            .catch((error) => {
+              console.error("Verification error:", error);
+              alert("Payment verification failed. Please try again.");
+            });
+        },
+        modal: {
+          ondismiss: function () {
+            // Handle the case when the user closes the modal without completing the payment
+            console.log("Payment modal closed");
+          },
+        },
+      };
+
+      // Open Razorpay payment modal
+      const razor = new window.Razorpay(options);
+      razor.open();
+    } catch (error) {
+      // Log the full error for debugging
+      console.error("Payment error:", error);
+    }
+  };
+
   const FUEL_PRICES = {
     Petrol: 109.53, // price per liter in your currency
     Diesel: 82.42,
     "Premium Petrol": 120,
   };
   const handleIncrease = () => {
+< HEAD
     setQuantity((prevQuantity) => (prevQuantity >= 10 ? prevQuantity : prevQuantity+1));
+=
+    setQuantity((prevQuantity) =>
+      prevQuantity >= 30 ? prevQuantity : prevQuantity + 1
+    );
+> 4a65975f5fab8e18542033badd337f03bac94e40
   };
 
   const handleDecrease = () => {
@@ -66,15 +143,14 @@ export default function Form() {
       price: price,
     };
 
-    console.log(postData);
-
     try {
       const response = await axios.post("http://localhost:5000/form", postData);
       if (!response) {
         console.log("error sending data", response);
       }
-      console.log("sent data succesfully", response);
-      redirect(`http://localhost:5173/sucess/${response.data._id}`);
+      setIsModelOpen(true);
+      console.log(response.data);
+      setCustomerId(response.data);
     } catch (error) {
       console.log(error);
     }
@@ -139,6 +215,84 @@ export default function Form() {
                 />
               </svg>
             </button>
+          </div>
+        </div>
+      )}
+      {isModelOpen && (
+        <div className="fixed z-10 inset-0 overflow-y-auto">
+          <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div
+              className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+              aria-hidden="true"
+            ></div>
+            <span
+              className="hidden sm:inline-block sm:align-middle sm:h-screen"
+              aria-hidden="true"
+            >
+              &#8203;
+            </span>
+            <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+              <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                <div className="sm:flex sm:items-start">
+                  <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                    <h3
+                      className="text-lg leading-6 font-medium text-gray-900"
+                      id="modal-title"
+                    >
+                      Payment Details
+                    </h3>
+                    <div className="mt-2">
+                      <dl className="divide-y divide-gray-200">
+                        <div className="py-4 flex items-center justify-between">
+                          <dt className="text-sm font-medium text-gray-500">
+                            Customer Id :
+                          </dt>
+                          <dd className="text-sm text-gray-900">
+                            {customerId}
+                          </dd>
+                        </div>
+                        <div className="py-4 flex items-center justify-between">
+                          <dt className="text-sm font-medium text-gray-500">
+                            Fuel
+                          </dt>
+                          <dd className="text-sm text-gray-900">{fuel}</dd>
+                        </div>
+                        <div className="py-4 flex items-center justify-between">
+                          <dt className="text-sm font-medium text-gray-500">
+                            Quantity
+                          </dt>
+                          <dd className="text-sm text-gray-900">
+                            {quantity} liters
+                          </dd>
+                        </div>
+                        <div className="py-4 flex items-center justify-between">
+                          <dt className="text-sm font-medium text-gray-500">
+                            Total Price
+                          </dt>
+                          <dd className="text-sm text-gray-900">₹{price}</dd>
+                        </div>
+                      </dl>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse justify-between">
+                <button
+                  type="button"
+                  className="inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:text-sm"
+                  onClick={onSubmitPayment}
+                >
+                  Pay Using Razorpay
+                </button>
+                <button
+                  type="button"
+                  className="inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+                  onClick={() => setIsModelOpen(false)}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}
@@ -495,7 +649,7 @@ export default function Form() {
                 type="submit"
                 className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
-                Pay using razorpay
+                Continue
               </button>
             </div>
           </form>
