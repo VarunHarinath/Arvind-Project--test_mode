@@ -42,4 +42,4 @@ app.use("/info", stateRouter);
 //     .catch((error) => console.log("error", error));
 // });
 
-app.listen(5000, () => console.log("Server is runing"));
+app.listen(5000, () => console.log("Server is running"));
