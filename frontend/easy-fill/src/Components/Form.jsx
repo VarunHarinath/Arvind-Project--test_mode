@@ -21,12 +21,12 @@ export default function Form() {
   const [price, setPrice] = useState(0);
   const [errorMessage, setErrorMessage] = useState("");
   const FUEL_PRICES = {
-    Petrol: 100, // price per liter in your currency
-    Diesel: 80,
+    Petrol: 109.53, // price per liter in your currency
+    Diesel: 82.42,
     "Premium Petrol": 120,
   };
   const handleIncrease = () => {
-    setQuantity((prevQuantity) => (prevQuantity >= 30 ? prevQuantity : prevQuantity+1));
+    setQuantity((prevQuantity) => (prevQuantity >= 10 ? prevQuantity : prevQuantity+1));
   };
 
   const handleDecrease = () => {
@@ -35,9 +35,9 @@ export default function Form() {
   };
   useEffect(() => {
     const FUEL_PRICES = {
-      Petrol: 100,
-      Diesel: 80,
-      "Premium Petrol": 120,
+      Petrol: 109.53,
+      Diesel: 82.62,
+      "Premium Petrol": 120.76,
     };
     const pricePerLiter = FUEL_PRICES[fuel] || 0;
     setPrice(quantity * pricePerLiter);
