@@ -20,7 +20,7 @@ export default function Form() {
   const [quantity, setQuantity] = useState(1);
   const [price, setPrice] = useState(0);
   const [errorMessage, setErrorMessage] = useState("");
-  const [isModelOpen, setIsModelOpen] = useState(true);
+  const [isModelOpen, setIsModelOpen] = useState(false);
   const [customerId, setCustomerId] = useState("");
 
   const onSubmitPayment = async () => {
@@ -38,13 +38,13 @@ export default function Form() {
       // Razorpay options
       const options = {
         key: apiKey,
-        amount: 100, // The amount should match the server endpoint
+        amount: price * 100, // Amount in paise (1 INR = 100 paise)
         currency: "INR",
         name: "Fuel X Corp.",
         description: "FuelX Payment Gateway Integration",
         image: "", // Add a valid image URL if needed
         order_id: Orderid,
-        callback_url: `https://project-club-fuisson.onrender.com/payments/verification/${customerId}}`,
+        callback_url: `http://localhost:5000/verification/${customerId}`,
         prefill: {
           name: `${fName} ${lName}`,
           email: email,
@@ -56,6 +56,30 @@ export default function Form() {
         theme: {
           color: "#f2f2f2",
         },
+        handler: function (response) {
+          // This function is called when the payment is successful
+          axios
+            .post(`http://localhost:5000/verification/${customerId}`, {
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+            })
+            .then((res) => {
+              console.log("Verification response:", res.data);
+              // Redirect to success page or show success message
+              window.location.href = `http://localhost:5173/success/${customerId}`;
+            })
+            .catch((error) => {
+              console.error("Verification error:", error);
+              alert("Payment verification failed. Please try again.");
+            });
+        },
+        modal: {
+          ondismiss: function () {
+            // Handle the case when the user closes the modal without completing the payment
+            console.log("Payment modal closed");
+          },
+        },
       };
 
       // Open Razorpay payment modal
@@ -64,22 +88,6 @@ export default function Form() {
     } catch (error) {
       // Log the full error for debugging
       console.error("Payment error:", error);
-
-      // Extract and log specific error details if available
-      if (error.response) {
-        console.error("Error response data:", error.response.data);
-        console.error("Error response status:", error.response.status);
-        console.error("Error response headers:", error.response.headers);
-      } else if (error.request) {
-        console.error("Error request:", error.request);
-      } else {
-        console.error("General error message:", error.message);
-      }
-
-      // Display a user-friendly error message
-      alert(
-        "An error occurred while processing the payment. Please try again later."
-      );
     }
   };
 
