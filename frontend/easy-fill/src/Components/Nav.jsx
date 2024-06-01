@@ -9,6 +9,7 @@ const navigation = [
   { name: "About us", href: "/aboutus" },
   { name: "Features", href: "#" },
   { name: "Contact Us", href: "/contactus" },
+  
 ];
 
 const Nav = () => {
