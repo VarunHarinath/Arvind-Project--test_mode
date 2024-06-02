@@ -97,13 +97,13 @@ export default function Form() {
     "Premium Petrol": 120,
   };
   const handleIncrease = () => {
-< HEAD
+
     setQuantity((prevQuantity) => (prevQuantity >= 10 ? prevQuantity : prevQuantity+1));
-=
+
     setQuantity((prevQuantity) =>
       prevQuantity >= 30 ? prevQuantity : prevQuantity + 1
     );
-> 4a65975f5fab8e18542033badd337f03bac94e40
+
   };
 
   const handleDecrease = () => {
