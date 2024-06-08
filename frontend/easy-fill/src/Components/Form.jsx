@@ -101,7 +101,7 @@ export default function Form() {
     setQuantity((prevQuantity) => (prevQuantity >= 10 ? prevQuantity : prevQuantity+1));
 
     setQuantity((prevQuantity) =>
-      prevQuantity >= 30 ? prevQuantity : prevQuantity + 1
+      prevQuantity >= 10 ? prevQuantity : prevQuantity + 1
     );
 
   };

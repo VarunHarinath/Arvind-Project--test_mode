@@ -28,7 +28,7 @@ const Login = () => {
                 </p>
               </div>
             </div>
-            <form onSubmit={(e) => e.preventDefault()}>
+            <form onSubmit={(e) => {e.preventDefault();<Link to={'/'} />}}>
               <div>
                 <label className="font-medium">Email</label>
                 <input
@@ -36,10 +36,18 @@ const Login = () => {
                   required
                   className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
                 />
+                <label className="font-medium">Password</label>
+                <input
+                  type="password"
+                  required
+                  className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
+                />
               </div>
-              <button className="w-full mt-4 px-4 py-2 text-white font-medium bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-600 rounded-lg duration-150">
+              <Link to="/">              <button className="w-full mt-4 px-4 py-2 text-white font-medium bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-600 rounded-lg duration-150">
                 Sign in
               </button>
+              </Link>
+
             </form>
             <div className="relative">
               <span className="block w-full h-px bg-gray-300"></span>
