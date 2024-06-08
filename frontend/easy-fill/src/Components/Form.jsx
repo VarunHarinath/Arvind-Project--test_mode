@@ -4,6 +4,7 @@ import "tailwindcss/tailwind.css";
 import axios from "axios";
 import { redirect } from "react-router-dom";
 
+
 export default function Form() {
   const [statedata, setStateData] = useState([]);
   const [filteredStates, setFilteredStates] = useState([]);
@@ -296,7 +297,7 @@ export default function Form() {
           </div>
         </div>
       )}
-      <div className="grid grid-cols-2 gap-7 ml-10  mt-20 justify-center mb-5 	divide-x divide-slate-500 bg-white adjusted-height">
+      <div className="text-base mt-20 justify-center mb-5 	divide-x divide-slate-500 bg-white adjusted-height">
         <div className="overflow-y-auto max-h-screen  justify-center p-7 hover:shadow-lg hover:shadow-slate-500 transition ease-in-out delay-150 rounded-lg  ring-2 ring-offset-2 ring-offset-blue-300 hover:ring-offset-blue-500  ">
           <form onSubmit={handleFormSubmit}>
             <div className="space-y-12 ">
@@ -654,9 +655,7 @@ export default function Form() {
             </div>
           </form>
         </div>
-        <div className="flex items-center justify-center ">
-          Error Loading Map
-        </div>
+        
       </div>
       <div className=" m-16 mt-19"></div>
     </>
