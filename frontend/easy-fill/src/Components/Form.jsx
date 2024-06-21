@@ -93,8 +93,8 @@ export default function Form() {
   };
 
   const FUEL_PRICES = {
-    Petrol: 109.53, // price per liter in your currency
-    Diesel: 82.42,
+    Petrol: 107.41, // price per liter in your currency
+    Diesel: 95.65,
     "Premium Petrol": 120,
   };
   const handleIncrease = () => {
